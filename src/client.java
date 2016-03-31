@@ -116,6 +116,7 @@ public class client extends Application {
 	list.setItems(items);
 	editArea2.add(list, 0, 0);
 	//the list of files will be input into the lists
+	//this is the IMPROVEMENT that selects the file from your personal repositories.
 
 	ListView<String> list2 = new ListView<>();
 	ObservableList<String> items2 =FXCollections.observableArrayList ();
