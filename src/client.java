@@ -55,6 +55,7 @@ public class client extends Application {
     private BorderPane layout;
     private TableView table;
     private ListView list;
+	//declare what utilities we're using
 
     private Desktop desktop = Desktop.getDesktop();
 
@@ -70,13 +71,15 @@ public class client extends Application {
         editArea.setHgap(5);
 	*/
 	layout = new BorderPane();
+	//create a border field
 	layout.setTop(editArea);
         Scene scene = new Scene(layout, 495, 410, Color.LIGHTGREY);
- 
+ 	//declare dimensions anf characteristics for interface
 	final FileChooser fileChooser = new FileChooser();
 	
 	Button button = new Button("Download");
 	button.setOnAction(
+	//Download button with event handler meant to open/select a file
 		new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(final ActionEvent e) {
@@ -89,13 +92,14 @@ public class client extends Application {
 	editArea.add(button, 0, 0);
 
 	Button button2 = new Button("Upload");
+	//Upload button with event handler meant to open/select a file
 	button2.setOnAction(
 		new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(final ActionEvent e) {
-				File file = fileChooser.showOpenDialog(primaryStage);
-				if (file!=null) {
-				openFile(file);
+				File file1 = fileChooser.showOpenDialog(primaryStage);
+				if (file1!=null) {
+				openFile(file1);
 				}
 			}
 		});
@@ -105,17 +109,16 @@ public class client extends Application {
 	
 	GridPane editArea2 = new GridPane();
 	editArea2.setPadding(new Insets(0, 0, 0, 0));
-	
+	//additional grid to separate the buttons from the lists
 
 	ListView<String> list = new ListView<>();
-	ObservableList<String> items =FXCollections.observableArrayList (
-   	"Single", "Double", "Suite", "Family App");
+	ObservableList<String> items =FXCollections.observableArrayList ();
 	list.setItems(items);
 	editArea2.add(list, 0, 0);
+	//the list of files will be input into the lists
 
 	ListView<String> list2 = new ListView<>();
-	ObservableList<String> items2 =FXCollections.observableArrayList (
-   	"Single", "Double", "Suite", "Family App");
+	ObservableList<String> items2 =FXCollections.observableArrayList ();
 	list2.setItems(items2);
 	editArea2.add(list2, 1, 0);
 	
@@ -141,7 +144,7 @@ public class client extends Application {
                     Level.SEVERE, null, ex
                 );
         }
-    }	
+    }	//this method works in unicen with the upper method for selecting a file
 
     public static void main(String[] args) {
         launch(args);
