@@ -10,7 +10,7 @@ public class ClientConnectionHandler extends Thread {
 	protected PrintWriter out     = null;
 	protected BufferedReader in   = null;
 
-	public ChatServerThread(Socket socket) {
+	public ClientConnectionHandler(Socket socket) {
 		super();
 		this.socket = socket;
 		try {
@@ -52,27 +52,32 @@ public class ClientConnectionHandler extends Thread {
 	
 	protected void processCommand(String command, String filename) {
 		// these are the commands
-		if (command.equalsIgnoreCase("DIR")) {
-			File shared = new File("shared/");
-			File[] files = shared.listFiles();
-			for (int i = 0; i < files.length; i++) {
-				out.println(files[i].getName());
+		try {
+			if (command.equalsIgnoreCase("DIR")) {
+				File shared = new File("ServerFiles");
+				File[] files = shared.listFiles();
+				for (int i = 0; i < files.length; i++) {
+					out.println(files[i].getName());
+				}
+			} else if (command.equalsIgnoreCase("UPLOAD")) {
+				File newFile = new File("ServerFiles/" + filename);
+				PrintWriter outFile = new PrintWriter(newFile);
+				String line = "";
+				while ((line = in.readLine()) != null) {
+		            outFile.print(line);
+		        }
+				outFile.close();
+			} else if (command.equalsIgnoreCase("DOWNLOAD")) {
+				FileInputStream fileIn = new FileInputStream(filename);
+				System.out.println(filename);
+				copyAllBytes(fileIn,outputStream);
+				fileIn.close();
+			} else {
+				out.println("400 Unrecognized Command: "+command);
 			}
-		} else if (command.equalsIgnoreCase("UPLOAD")) {
-			File newFile = new File("shared/" + filename);
-			PrintWriter outFile = new PrintWriter(newFile);
-			String line = "";
-			while ((line = in.readLine()) != null) {
-                outFile.print(line);
-            }
-			outFile.close();
-		} else if (command.equalsIgnoreCase("DOWNLOAD")) {
-			FileInputStream fileIn = new FileInputStream(filename);
-			copyAllBytes(fileIn,outputStream);
-			fileIn.close()
-		} else {
-			out.println("400 Unrecognized Command: "+command);
-		}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} 
 	}
 	
 	private void copyAllBytes(InputStream fileIn, OutputStream out) 
