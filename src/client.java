@@ -50,6 +50,7 @@ public class client extends Application {
     
     private Stage window;
     private BorderPane layout;
+<<<<<<< HEAD
 	protected String compName = "";
 	protected String filename = "";
 	private Socket socket = null;
@@ -63,12 +64,18 @@ public class client extends Application {
 	
 	public  static String SERVER_ADDRESS = "localhost";
 	public  static int    SERVER_PORT = 8080;
+=======
+    private TableView table;
+    private ListView list;
+	//declare what utilities we're using
+>>>>>>> a5c5d1d552c56e3f807ee7c410ffd69ec801a37e
 
 	
 
     @Override
     public void start(Stage primaryStage) throws Exception {
         
+<<<<<<< HEAD
         compName = getParameters().getRaw().get(0);
 		filename = getParameters().getRaw().get(1);
         
@@ -79,6 +86,27 @@ public class client extends Application {
 		
 		
 		primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+=======
+	primaryStage.setTitle("File Sharer v1.0");
+	//insert
+	GridPane editArea = new GridPane();
+	editArea.setPadding(new Insets(0, 0, 0, 0));
+        /*
+        editArea.setVgap(5);
+        editArea.setHgap(5);
+	*/
+	layout = new BorderPane();
+	//create a border field
+	layout.setTop(editArea);
+        Scene scene = new Scene(layout, 495, 410, Color.LIGHTGREY);
+ 	//declare dimensions anf characteristics for interface
+	final FileChooser fileChooser = new FileChooser();
+	
+	Button button = new Button("Download");
+	button.setOnAction(
+	//Download button with event handler meant to open/select a file
+		new EventHandler<ActionEvent>() {
+>>>>>>> a5c5d1d552c56e3f807ee7c410ffd69ec801a37e
 			@Override
 			public void handle(WindowEvent event) {
 				try {
@@ -102,6 +130,7 @@ public class client extends Application {
 		ListView<String> list = new ListView<>();
 		editArea2.add(list, 0, 0);
 
+<<<<<<< HEAD
 		ListView<String> list2 = new ListView<>();
 		editArea2.add(list2, 1, 0);
 	
@@ -134,6 +163,17 @@ public class client extends Application {
 					} catch (IOException q) {
 						System.err.println("Error reading from socket.");
 					}
+=======
+	Button button2 = new Button("Upload");
+	//Upload button with event handler meant to open/select a file
+	button2.setOnAction(
+		new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(final ActionEvent e) {
+				File file1 = fileChooser.showOpenDialog(primaryStage);
+				if (file1!=null) {
+				openFile(file1);
+>>>>>>> a5c5d1d552c56e3f807ee7c410ffd69ec801a37e
 				}
 			});
 		editArea.add(button, 0, 0);
@@ -158,7 +198,25 @@ public class client extends Application {
 	
 		layout.setTop(editArea);
 	
+<<<<<<< HEAD
 	
+=======
+	GridPane editArea2 = new GridPane();
+	editArea2.setPadding(new Insets(0, 0, 0, 0));
+	//additional grid to separate the buttons from the lists
+
+	ListView<String> list = new ListView<>();
+	ObservableList<String> items =FXCollections.observableArrayList ();
+	list.setItems(items);
+	editArea2.add(list, 0, 0);
+	//the list of files will be input into the lists
+	//this is the IMPROVEMENT that selects the file from your personal repositories.
+
+	ListView<String> list2 = new ListView<>();
+	ObservableList<String> items2 =FXCollections.observableArrayList ();
+	list2.setItems(items2);
+	editArea2.add(list2, 1, 0);
+>>>>>>> a5c5d1d552c56e3f807ee7c410ffd69ec801a37e
 	
 		// Adding the lists
 		
@@ -214,6 +272,7 @@ public class client extends Application {
 		}
         
         try {
+<<<<<<< HEAD
         	outputStream = socket.getOutputStream();
 			networkOut = new PrintWriter(outputStream, true);
 			networkIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -221,6 +280,16 @@ public class client extends Application {
 			System.err.println("IOEXception while opening a read/write connection");
 		}
     }
+=======
+            desktop.open(file);
+        } catch (IOException ex) {
+            Logger.getLogger(
+                FileChooserSample.class.getName()).log(
+                    Level.SEVERE, null, ex
+                );
+        }
+    }	//this method works in unicen with the upper method for selecting a file
+>>>>>>> a5c5d1d552c56e3f807ee7c410ffd69ec801a37e
 
     public static void main(String[] args) {
         launch(args);
