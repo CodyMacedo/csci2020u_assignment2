@@ -4,6 +4,17 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
+
+
+
+/*
+ * ClientConnectionHandler
+ *
+ * This class is the thread implementation that Server.java uses to handle
+ * client requests. This class reads one of three commands and does the 
+ * corresponding actions
+ *
+ */
 public class ClientConnectionHandler extends Thread {
 	protected Socket socket       = null;
 	protected OutputStream outputStream	= null;
@@ -68,7 +79,8 @@ public class ClientConnectionHandler extends Thread {
 		        }
 				outFile.close();
 			} else if (command.equalsIgnoreCase("DOWNLOAD")) {
-				FileInputStream fileIn = new FileInputStream(filename);
+				File newFile = new File("ServerFiles/" + filename);
+				FileInputStream fileIn = new FileInputStream(newFile);
 				System.out.println(filename);
 				copyAllBytes(fileIn,outputStream);
 				fileIn.close();
@@ -86,6 +98,7 @@ public class ClientConnectionHandler extends Thread {
         int numBytes = -1;
         while ((numBytes = fileIn.read(buffer)) > 0) {
             out.write(buffer);
+            out.flush();
         }
     }
 }

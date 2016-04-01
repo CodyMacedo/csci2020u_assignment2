@@ -45,7 +45,13 @@ import javafx.stage.WindowEvent;
 //All the manditory libraries
 import java.time.LocalDate;
 
-
+/*
+ * client
+ *
+ * This class is the client class for the server. It has a user interface with
+ * buttons that allow it to upload and download files from the server
+ *
+ */
 public class client extends Application {
     
     private Stage window;
@@ -53,7 +59,6 @@ public class client extends Application {
 	protected String compName = "";
 	protected String filename = "";
 	private Socket socket = null;
-	private OutputStream outputStream = null;
 	private BufferedReader in = null;
 	private PrintWriter networkOut = null;
 	private BufferedReader networkIn = null;
@@ -117,6 +122,14 @@ public class client extends Application {
 				@Override
 				public void handle(final ActionEvent e) {
 					String currentItem = list2.getSelectionModel().getSelectedItem();
+					try {
+						networkOut.close();
+						networkIn.close();
+						socket.close();
+					} catch (IOException q) {
+						q.printStackTrace();
+					}
+					makeConnection();
 					networkOut.println("DOWNLOAD " + currentItem);
 					try {
 						// get file from client
@@ -144,14 +157,27 @@ public class client extends Application {
 				@Override
 				public void handle(final ActionEvent e) {
 					String currentItem = list.getSelectionModel().getSelectedItem();
+					try {
+						networkOut.close();
+						networkIn.close();
+						socket.close();
+					} catch (IOException q) {
+						q.printStackTrace();
+					}
+					makeConnection();
 					networkOut.println("UPLOAD " + currentItem);
-					
-					FileInputStream fileIn = new FileInputStream(filename + "/" + currentItem);
-					copyAllBytes(fileIn,outputStream);
-					fileIn.close();
-					// update server list
-					serverList.add(currentItem);
-					list2.setItems(serverList);
+					try {
+						File temp = new File(filename + "/" + currentItem);
+						FileInputStream fileIn = new FileInputStream(temp);
+						OutputStream outputStream = socket.getOutputStream();
+						copyAllBytes(fileIn,outputStream);
+						fileIn.close();
+						// update server list
+						serverList.add(currentItem);
+						list2.setItems(serverList);
+					} catch (IOException q) {
+						System.err.println("Error reading from socket. Line 156");
+					}
 				}
 			});
 		editArea.add(button2, 1, 0);
@@ -192,12 +218,14 @@ public class client extends Application {
 		
 	}	
 	
-	private void copyAllBytes(InputStream fileIn, OutputStream out) 
+	private void copyAllBytes(InputStream fileIn, OutputStream fout) 
                                                throws IOException {
         byte[] buffer = new byte[1024];
         int numBytes = -1;
         while ((numBytes = fileIn.read(buffer)) > 0) {
-            out.write(buffer);
+            System.out.println("hello");
+            fout.write(buffer);
+            fout.flush();
         }
     }
     
@@ -214,7 +242,7 @@ public class client extends Application {
 		}
         
         try {
-        	outputStream = socket.getOutputStream();
+        	OutputStream outputStream = socket.getOutputStream();
 			networkOut = new PrintWriter(outputStream, true);
 			networkIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		} catch (IOException e) {
